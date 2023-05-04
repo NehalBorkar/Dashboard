@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+     <link rel="stylesheet" href="style.css">
+     <!-- <script type="module" src="index.js"></script> -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1 >Create Your Account</h1>
+            <div class="center-box" id="register-div">
+                <input type="text" id="FName" class="text-field" name="Name" placeholder="First Name" required/><br>
+                <input type="text" id="LName" class="text-field" name="Name" placeholder="Last Name" required/><br>
+                <input type="email" id="email" class="text-field" name="email" placeholder="Email" required/><br>
+                <input type="password" id="psw" class="text-field" name="psw" placeholder="Password" required/><br>
+                <hr>
+               
+                <button type="button" id="submitData" name="submitData" class="registerbtn">Register</button>
+                <p>Already have an account? <a href="index.html">Log In</a>.</p>
+            </div>
+          
+    </div>
+   
+</body>
+</html>
+
+<script type="module">
+   // Import the functions you need from the SDKs you need
+ import {initializeApp} from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+ import {
+     getAuth,
+     createUserWithEmailAndPassword,
+     signInWithEmailAndPassword,
+     signOut
+ } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+ import {getDatabase, set, ref, update} from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+
+
+ // TODO: Add SDKs for Firebase products that you want to use
+ // https://firebase.google.com/docs/web/setup#available-libraries
+
+ // Your web app's Firebase configuration
+ const firebaseConfig = {
+   apiKey: "AIzaSyCJDnJ5dEoLa3XAYL-4Dqm9FSo7cG422SE",
+ authDomain: "fir-nehal.firebaseapp.com",
+ projectId: "fir-nehal",
+ storageBucket: "fir-nehal.appspot.com",
+ messagingSenderId: "873839134873",
+ appId: "1:873839134873:web:1d2a707d6207f12b411008"
+ };
+
+ // Initialize Firebase
+ const app = initializeApp(firebaseConfig);
+ const auth = getAuth();
+ const database = getDatabase(app);
+
+ submitData.addEventListener('click', (e) => {
+
+     var email = document.getElementById('email').value;
+     var password = document.getElementById('psw').value;
+
+     //sign up user
+     createUserWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    // Signed in
+    const user = userCredential.user;
+    // ... user.uid
+
+    // save data into real time database
+    set(ref(database, 'users/' + user.uid), {
+      email: email,
+      password: password
+    })
+    .then(() => {
+      // Wait for one second before showing the toast message
+      setTimeout(() => {
+        M.toast({html: `Register successfully ${email}`, classes: "green"});
+
+        // Redirect to the dashboard page after the toast message disappears
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 1000);
+      }, ); // Wait for 1 second (1000 milliseconds) before showing the toast message
+    })
+    .catch((err) => {
+      console.log(err);
+      M.toast({html: "Failed to save user data", classes: "red"});
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+    M.toast({html: "Check Email Or Password", classes: "red"});
+})
+  });
+
+        
+      
+ 
+
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+
+
+   
